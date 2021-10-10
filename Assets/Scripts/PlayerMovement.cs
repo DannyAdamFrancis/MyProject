@@ -11,11 +11,13 @@ public class PlayerMovement : MonoBehaviour
     private float horizontalInput;
     private float forwardInput;
     private Rigidbody playerRb;
+    private Animator anim;
 
     // Start is called before the first frame update
     void Start()
     {
         playerRb = GetComponent<Rigidbody>();
+        anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -32,6 +34,18 @@ public class PlayerMovement : MonoBehaviour
             playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             isOnGround = false;
         }
+
+        Vector2 velocity = playerRb.velocity;
+
+        if (velocity.x == 0)
+        {
+            anim.SetBool("walk", false);
+        }
+        else
+        {
+            anim.SetBool("walk", true);
+        }
+
     }
 
     private void OnCollisionEnter(Collision collision)
