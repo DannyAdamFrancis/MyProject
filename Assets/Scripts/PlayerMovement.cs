@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     public float speed = 5.0f;
     public float jumpForce = 5.0f;
     public bool isOnGround = true;
+    public float rotationSpeed;
     private float horizontalInput;
     private float forwardInput;
     private Rigidbody playerRb;
@@ -28,6 +29,21 @@ public class PlayerMovement : MonoBehaviour
 
         transform.Translate(Vector3.forward * Time.deltaTime * speed * forwardInput);
         transform.Translate(Vector3.right* Time.deltaTime * speed * horizontalInput);
+
+        Vector3 movementDirection = new Vector3(horizontalInput, 0, forwardInput);
+
+        movementDirection.Normalize();
+
+        transform.Translate(movementDirection * speed * Time.deltaTime, Space.World);
+
+        if (movementDirection != Vector3.zero)
+        {
+            Quaternion toRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
+        }
+
+
+
 
         if (Input.GetKeyDown(KeyCode.Space) && isOnGround)
         {
